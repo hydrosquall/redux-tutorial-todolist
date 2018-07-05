@@ -1,11 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-// Action Creator
-const toggleTodo = id => ({
-  type: "TOGGLE_TODO",
-  id
-});
+import { toggleTodo } from "../actions";
 
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {

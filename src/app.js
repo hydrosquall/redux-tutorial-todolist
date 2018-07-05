@@ -4,13 +4,7 @@ import { connect } from "react-redux";
 import { VisibleTodoList } from "./components/todolist";
 import { Footer } from "./components/footer";
 
-// Action Creators
-let nextTodoId = 0;
-const addTodo = text => ({
-  type: "ADD_TODO",
-  id: nextTodoId++,
-  text
-});
+import { addTodo } from "./actions";
 
 let AddTodo = ({ dispatch }) => {
   let input;
