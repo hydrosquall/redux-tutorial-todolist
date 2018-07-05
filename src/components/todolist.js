@@ -1,6 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 
+// Action Creator
+const toggleTodo = id => ({
+  type: "TOGGLE_TODO",
+  id
+});
+
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
     case "SHOW_ALL":
@@ -40,10 +46,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onTodoClick: id => {
-      dispatch({
-        type: "TOGGLE_TODO",
-        id
-      });
+      dispatch(toggleTodo(id));
     }
   };
 };
