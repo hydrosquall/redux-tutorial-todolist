@@ -23,4 +23,19 @@ const fakeDatabase = {
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export const fetchTodos = filter => delay(500).then(() => fakeDatabase);
+export const fetchTodos = filter =>
+  delay(500).then(() => {
+    const todos = fakeDatabase.todos;
+    console.log(filter);
+    switch (filter) {
+      case "all":
+        return todos;
+      case "completed":
+        return todos.filter(t => t.completed);
+      case "active":
+        return todos.filter(t => !t.completed);
+      default:
+        console.log("backend filter not recognized");
+        return todos;
+    }
+  });
