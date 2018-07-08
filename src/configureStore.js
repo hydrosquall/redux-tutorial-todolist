@@ -5,6 +5,7 @@ import { loadState, saveState } from "./localStorage";
 
 const configureStore = () => {
   const persistedState = loadState();
+  loadState();
   const store = createStore(todoApp, persistedState);
 
   store.subscribe(

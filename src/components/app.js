@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { VisibleTodoList } from "./components/todolist";
-import { Footer } from "./components/footer";
+import { VisibleTodoList } from "./todolist";
+import { Footer } from "./footer";
 
-import { addTodo } from "./actions";
+import { addTodo } from "../actions";
 
 let AddTodo = ({ dispatch }) => {
   let input;
