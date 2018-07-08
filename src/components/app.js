@@ -33,11 +33,11 @@ let AddTodo = ({ dispatch }) => {
 
 AddTodo = connect()(AddTodo);
 
-const TodoApp = ({ store }) => (
+const TodoApp = () => (
   <div>
     <AddTodo />
     <VisibleTodoList />
-    <Footer store={store} />
+    <Footer />
   </div>
 );
 

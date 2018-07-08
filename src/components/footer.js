@@ -1,38 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
 
-const FilterLink = ({ filter, children }) => (
-  <NavLink
-    exact
-    to={"/" + filter === "all" ? "" : filter}
-    activeStyle={{
-      textDecoration: "none",
-      color: "black"
-    }}
-  >
-    {children}
-  </NavLink>
-);
+import FilterLink from "./filterlink";
 
-const Footer = ({ store }) => (
+const Footer = () => (
   <p>
-    Show:{" "}
-    <FilterLink filter="all" store={store}>
-      All
-    </FilterLink>{" "}
-    <FilterLink filter="completed" store={store}>
-      Active
-    </FilterLink>{" "}
-    <FilterLink filter="active" store={store}>
-      Completed
-    </FilterLink>
+    Show: <FilterLink filter="all">All</FilterLink>{" "}
+    <FilterLink filter="completed">Active</FilterLink>{" "}
+    <FilterLink filter="active">Completed</FilterLink>
   </p>
 );
-
-FilterLink.propTypes = {
-  filter: PropTypes.oneOf(["all", "completed", "active"]).isRequired,
-  children: PropTypes.node.isRequired
-};
 
 export { Footer };
