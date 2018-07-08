@@ -5,16 +5,6 @@ import todoApp from "./reducers";
 import promise from "redux-promise";
 import createLogger from "redux-logger";
 
-const wrapDispatchWithMiddlewares = (store, middlewares) => {
-  middlewares
-    .slice()
-    .reverse()
-    .forEach(
-      // reverse so that we can have the promise before we log.
-      middleware => (store.dispatch = middleware(store)(store.dispatch)) // 2 functions deep
-    );
-};
-
 const configureStore = () => {
   const middlewares = [promise];
 
