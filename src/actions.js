@@ -1,6 +1,8 @@
 // Redux action creators
 import { v4 } from "node-uuid";
 
+import * as api from "./api";
+
 // Add Todos
 const addTodo = text => ({
   type: "ADD_TODO",
@@ -14,10 +16,15 @@ const toggleTodo = id => ({
   id
 });
 
+// API
 const receiveTodos = (filter, response) => ({
   type: "RECEIVE_TODOS",
   filter,
   response
 });
+
+// Example action that returns a PROMISE
+export const fetchTodos = filter =>
+  api.fetchTodos(filter).then(response => receiveTodos(filter, response));
 
 export { addTodo, toggleTodo, receiveTodos };

@@ -5,7 +5,6 @@ import { withRouter } from "react-router";
 import * as actions from "../actions";
 
 import { getVisibleTodos } from "../reducers";
-import { fetchTodos } from "../api";
 
 class VisibleTodoList extends Component {
   componentDidMount() {
@@ -19,10 +18,8 @@ class VisibleTodoList extends Component {
   }
 
   fetchData() {
-    const { filter, receiveTodos } = this.props;
-    fetchTodos(filter).then(todos => {
-      receiveTodos(filter, todos); // merge API todos with local todos
-    });
+    const { filter, fetchTodos } = this.props;
+    fetchTodos(filter);
   }
 
   render() {
