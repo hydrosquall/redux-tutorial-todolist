@@ -1,20 +1,7 @@
 import { combineReducers } from "redux";
 
-import byId, * as fromById from "./byId";
-
-const createList = filter => {
-  return (state = [], action) => {
-    if (action.filter !== filter) {
-      return state;
-    }
-    switch (action.type) {
-      case "RECEIVE_TODOS":
-        return action.response.map(todo => todo.id);
-      default:
-        return state;
-    }
-  };
-};
+import byId, * as fromById from "./byId"; // second namespace = selectors
+import createList, * as fromList from "./createList";
 
 const idsByFilter = combineReducers({
   all: createList("all"),
@@ -36,7 +23,6 @@ export default todos;
 // A "selector": something that prepares the state for viewing.
 // It frees components from knowing about the shape of the state.
 export const getVisibleTodos = (state, filter) => {
-  const ids = state.idsByFilter[filter]; // move responsibility to the backend API
-  console.log(state.idsByFilter);
-  return ids.map(id => state.byId[id]);
+  const ids = fromList.getIds(state.idsByFilter[filter]); // move responsibility to the backend API
+  return ids.map(id => fromById.getTodo(state.byId, id));
 };
