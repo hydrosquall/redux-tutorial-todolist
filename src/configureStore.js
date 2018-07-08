@@ -5,44 +5,56 @@ import { loadState, saveState } from "./localStorage";
 
 // Show how to override base methods
 const addLoggingToDispatch = store => {
-  const next = store.dispatch;
-  if (!console.group) {
-    // if non-chrome
-    return next;
-  }
+  return next => {
+    if (!console.group) {
+      // if non-chrome
+      return next;
+    }
 
-  return action => {
-    console.group(action.type);
-    console.log("%c prev state", "color: gray", store.getState());
-    console.log("%c action", "color: blue", action);
-    const returnValue = rawDispatch(action);
-    console.log("%c next state", "color: green", store.getState());
-    console.groupEnd(action.type);
-    return returnValue;
+    return action => {
+      console.group(action.type);
+      console.log("%c prev state", "color: gray", store.getState());
+      console.log("%c action", "color: blue", action);
+      const returnValue = next(action);
+      console.log("%c next state", "color: green", store.getState());
+      console.groupEnd(action.type);
+      return returnValue;
+    };
   };
 };
 
 const addPromiseSupportToDispatch = store => {
-  const next = store.dispatch; // b/c it pulls the most recent dispatch, may not be raw
-  return action => {
-    if (typeof action.then === "function") {
-      return action.then(next);
-    }
-    return next(action);
+  return next => {
+    return action => {
+      if (typeof action.then === "function") {
+        return action.then(next);
+      }
+      return next(action);
+    };
   };
 };
 
+const wrapDispatchWithMiddlewares = (store, middlewares) => {
+  middlewares.forEach(
+    middleware => (store.dispatch = middleware(store)(store.dispatch)) // 2 functions deep
+  );
+};
+
 const configureStore = () => {
-  const persistedState = loadState();
-  loadState();
-  const store = createStore(todoApp, persistedState);
+  // Don't use localStorage now that we have an API set up
+  // const persistedState = loadState();
+  // const store = createStore(todoApp, persistedState);
+  const store = createStore(todoApp);
+  const middlewares = [];
 
   // Only instrument in dev environment
   if (process.env.NODE_ENV !== "production") {
-    store.dispatch = addLoggingToDispatch(store);
+    middlewares.push(addLoggingToDispatch);
   }
 
-  store.dispatch = addPromiseSupportToDispatch(store);
+  middlewares.push(addPromiseSupportToDispatch);
+
+  wrapDispatchWithMiddlewares(store, middlewares);
 
   store.subscribe(
     throttle(() => {
