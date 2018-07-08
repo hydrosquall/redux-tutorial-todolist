@@ -33,10 +33,10 @@ let AddTodo = ({ dispatch }) => {
 
 AddTodo = connect()(AddTodo);
 
-const TodoApp = () => (
+const TodoApp = ({ match }) => (
   <div>
     <AddTodo />
-    <VisibleTodoList />
+    <VisibleTodoList filter={match.params.filter || "all"} />
     <Footer />
   </div>
 );
