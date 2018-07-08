@@ -2,7 +2,6 @@
 import { v4 } from "node-uuid";
 
 // Add Todos
-let nextTodoId = 0;
 const addTodo = text => ({
   type: "ADD_TODO",
   id: v4(), // unique identifier

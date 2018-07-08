@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { render } from "react-dom";
 import { Provider } from "react-redux";
 import throttle from "lodash/throttle";
 
@@ -10,17 +10,6 @@ import { saveState } from "./localStorage";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
-const render = () => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <TodoApp />
-    </Provider>,
-    rootElement
-  );
-};
-
-// NEED TO SUBSCRIBE RENDER TO RUN EVERY TIME STATE CHANGES!!
-store.subscribe(render);
 
 store.subscribe(
   throttle(() => {
@@ -28,7 +17,12 @@ store.subscribe(
     saveState({
       todos: store.getState().todos
     });
-  }, 1000) // only rerun once per second
+  }, 1000) // throttle saving to avoid excessive serialization
 );
 
-render();
+render(
+  <Provider store={store}>
+    <TodoApp />
+  </Provider>,
+  rootElement
+);
