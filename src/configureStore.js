@@ -1,34 +1,9 @@
-import { createStore } from "redux";
-import throttle from "lodash/throttle";
+import { createStore, applyMiddleware } from "redux";
 import todoApp from "./reducers";
-import { loadState, saveState } from "./localStorage";
 
-// Show how to override base methods
-// "next" is just the "dispatch" function returned by previous middleware
-const logging = store => next => {
-  if (!console.group) {
-    // if non-chrome
-    return next;
-  }
-
-  return action => {
-    console.group(action.type);
-    console.log("%c prev state", "color: gray", store.getState());
-    console.log("%c action", "color: blue", action);
-    const returnValue = next(action);
-    console.log("%c next state", "color: green", store.getState());
-    console.groupEnd(action.type);
-    return returnValue;
-  };
-};
-
-// "next" is just the "dispatch" function returned by previous middleware
-const promise = store => next => action => {
-  if (typeof action.then === "function") {
-    return action.then(next);
-  }
-  return next(action);
-};
+// Production versions of our local middleware
+import promise from "redux-promise";
+import createLogger from "redux-logger";
 
 const wrapDispatchWithMiddlewares = (store, middlewares) => {
   middlewares
@@ -41,25 +16,18 @@ const wrapDispatchWithMiddlewares = (store, middlewares) => {
 };
 
 const configureStore = () => {
-  // Don't use localStorage now that we have an API set up
-  const persistedState = loadState();
-  const store = createStore(todoApp, persistedState);
-  // const store = createStore(todoApp);
   const middlewares = [promise];
 
   // Only instrument in dev environment
   if (process.env.NODE_ENV !== "production") {
-    middlewares.push(logging);
+    middlewares.push(createLogger);
   }
 
-  wrapDispatchWithMiddlewares(store, middlewares);
-
-  store.subscribe(
-    throttle(() => {
-      saveState({
-        todos: store.getState().todos
-      });
-    }, 1000)
+  const store = createStore(
+    todoApp,
+    // persistedState would go in middle,
+    //enhancers go last
+    applyMiddleware(...middlewares)
   );
 
   return store;
