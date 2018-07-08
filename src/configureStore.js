@@ -3,10 +3,35 @@ import throttle from "lodash/throttle";
 import todoApp from "./reducers";
 import { loadState, saveState } from "./localStorage";
 
+// Show how to override base methods
+const addLoggingToDispatch = store => {
+  const rawDispatch = store.dispatch;
+
+  if (!console.group) {
+    // if non-chrome
+    return rawDispatch;
+  }
+
+  return action => {
+    console.group(action.type);
+    console.log("%c prev state", "color: gray", store.getState());
+    console.log("%c action", "color: blue", action);
+    const returnValue = rawDispatch(action);
+    console.log("%c next state", "color: green", store.getState());
+    console.groupEnd(action.type);
+    return returnValue;
+  };
+};
+
 const configureStore = () => {
   const persistedState = loadState();
   loadState();
   const store = createStore(todoApp, persistedState);
+
+  // Only instrument in dev environment
+  if (process.env.NODE_ENV !== "production") {
+    store.dispatch = addLoggingToDispatch(store);
+  }
 
   store.subscribe(
     throttle(() => {
