@@ -17,6 +17,7 @@ const toggleTodo = id => ({
 });
 
 // API
+// keep this private!
 const receiveTodos = (filter, response) => ({
   type: "RECEIVE_TODOS",
   filter,
@@ -24,7 +25,7 @@ const receiveTodos = (filter, response) => ({
 });
 
 // Example action that returns a PROMISE
-export const fetchTodos = filter =>
+const fetchTodos = filter =>
   api.fetchTodos(filter).then(response => receiveTodos(filter, response));
 
-export { addTodo, toggleTodo, receiveTodos };
+export { addTodo, toggleTodo, fetchTodos };
