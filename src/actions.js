@@ -14,10 +14,4 @@ const toggleTodo = id => ({
   id
 });
 
-// Footer
-const setVisibilityFilter = filter => ({
-  type: "SET_VISIBILITY_FILTER",
-  filter: filter
-});
-
-export { addTodo, setVisibilityFilter, toggleTodo };
+export { addTodo, toggleTodo };
