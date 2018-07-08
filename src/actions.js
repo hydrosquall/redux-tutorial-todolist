@@ -25,7 +25,11 @@ const receiveTodos = (filter, response) => ({
 });
 
 // Example action that returns a PROMISE
-const fetchTodos = filter =>
-  api.fetchTodos(filter).then(response => receiveTodos(filter, response));
+const fetchTodos = filter => {
+  console.log(filter);
+  return api
+    .fetchTodos(filter)
+    .then(response => receiveTodos(filter, response));
+};
 
 export { addTodo, toggleTodo, fetchTodos };
