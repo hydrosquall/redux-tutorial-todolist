@@ -4,7 +4,7 @@ import todoApp from "./reducers";
 import { loadState, saveState } from "./localStorage";
 
 // Show how to override base methods
-const addLoggingToDispatch = store => {
+const logging = store => {
   return next => {
     if (!console.group) {
       // if non-chrome
@@ -23,7 +23,7 @@ const addLoggingToDispatch = store => {
   };
 };
 
-const addPromiseSupportToDispatch = store => {
+const promise = store => {
   return next => {
     return action => {
       if (typeof action.then === "function") {
@@ -35,24 +35,26 @@ const addPromiseSupportToDispatch = store => {
 };
 
 const wrapDispatchWithMiddlewares = (store, middlewares) => {
-  middlewares.forEach(
-    middleware => (store.dispatch = middleware(store)(store.dispatch)) // 2 functions deep
-  );
+  middlewares
+    .slice()
+    .reverse()
+    .forEach(
+      // reverse so that we can have the promise before we log.
+      middleware => (store.dispatch = middleware(store)(store.dispatch)) // 2 functions deep
+    );
 };
 
 const configureStore = () => {
   // Don't use localStorage now that we have an API set up
-  // const persistedState = loadState();
-  // const store = createStore(todoApp, persistedState);
-  const store = createStore(todoApp);
-  const middlewares = [];
+  const persistedState = loadState();
+  const store = createStore(todoApp, persistedState);
+  // const store = createStore(todoApp);
+  const middlewares = [promise];
 
   // Only instrument in dev environment
   if (process.env.NODE_ENV !== "production") {
-    middlewares.push(addLoggingToDispatch);
+    middlewares.push(logging);
   }
-
-  middlewares.push(addPromiseSupportToDispatch);
 
   wrapDispatchWithMiddlewares(store, middlewares);
 
