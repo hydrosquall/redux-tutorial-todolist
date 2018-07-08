@@ -73,5 +73,6 @@ export default todos;
 // It frees components from knowing about the shape of the state.
 export const getVisibleTodos = (state, filter) => {
   const ids = state.idsByFilter[filter]; // move responsibility to the backend API
+  console.log(state.idsByFilter);
   return ids.map(id => state.byId[id]);
 };
