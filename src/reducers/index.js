@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-
+// Alias since the function names would otherwise collide.
 import todos, * as fromTodos from "./todos";
 
 const todoApp = combineReducers({

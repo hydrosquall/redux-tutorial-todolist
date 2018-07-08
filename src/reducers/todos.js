@@ -36,6 +36,7 @@ export default todos;
 
 // selector that operates on combined state
 // A "selector": something that prepares the state for viewing.
+// It frees components from knowing about the shape of the state.
 export const getVisibleTodos = (todos, filter) => {
   switch (filter) {
     case "all":
