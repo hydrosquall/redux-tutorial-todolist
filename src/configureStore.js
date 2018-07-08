@@ -5,11 +5,10 @@ import { loadState, saveState } from "./localStorage";
 
 // Show how to override base methods
 const addLoggingToDispatch = store => {
-  const rawDispatch = store.dispatch;
-
+  const next = store.dispatch;
   if (!console.group) {
     // if non-chrome
-    return rawDispatch;
+    return next;
   }
 
   return action => {
@@ -24,12 +23,12 @@ const addLoggingToDispatch = store => {
 };
 
 const addPromiseSupportToDispatch = store => {
-  const rawDispatch = store.dispatch;
+  const next = store.dispatch; // b/c it pulls the most recent dispatch, may not be raw
   return action => {
     if (typeof action.then === "function") {
-      return action.then(rawDispatch);
+      return action.then(next);
     }
-    return rawDispatch(action);
+    return next(action);
   };
 };
 
