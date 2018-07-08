@@ -1,3 +1,5 @@
+import { combineReducers } from "redux";
+
 const todo = (state, action) => {
   switch (action.type) {
     case "ADD_TODO":
@@ -20,32 +22,53 @@ const todo = (state, action) => {
   }
 };
 
-const todos = (state = [], action) => {
+// Use dictionary instead of a list to store items
+const byId = (state = {}, action) => {
   switch (action.type) {
     case "ADD_TODO":
-      const newState = [...state, todo(undefined, action)];
-      return newState;
     case "TOGGLE_TODO":
-      return state.map(t => todo(t, action));
+      return {
+        ...state,
+        [action.id]: todo(state[action.id], action)
+      };
     default:
       return state;
   }
 };
 
+// List of all todoIds
+const allIds = (state = [], action) => {
+  switch (action.type) {
+    case "ADD_TODO":
+      return [...state, action.id];
+    default:
+      return state;
+  }
+};
+
+const todos = combineReducers({
+  byId,
+  allIds
+});
+
 export default todos;
+
+// local helper to just get all available todos
+const getAllTodos = state => state.allIds.map(id => state.byId[id]);
 
 // selector that operates on combined state
 // A "selector": something that prepares the state for viewing.
 // It frees components from knowing about the shape of the state.
-export const getVisibleTodos = (todos, filter) => {
+export const getVisibleTodos = (state, filter) => {
+  const allTodos = getAllTodos(state);
   switch (filter) {
     case "all":
-      return todos;
+      return allTodos;
     case "completed":
-      return todos.filter(t => t.completed);
+      return allTodos.filter(t => t.completed);
     case "active":
-      return todos.filter(t => !t.completed);
+      return allTodos.filter(t => !t.completed);
     default:
-      return todos;
+      throw new Error(`Unknown filter: ${filter}.`); // don't accept stuff passively
   }
 };
