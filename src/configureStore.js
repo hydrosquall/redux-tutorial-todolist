@@ -4,34 +4,28 @@ import todoApp from "./reducers";
 import { loadState, saveState } from "./localStorage";
 
 // Show how to override base methods
-const logging = store => {
-  return next => {
-    if (!console.group) {
-      // if non-chrome
-      return next;
-    }
+const logging = store => next => {
+  if (!console.group) {
+    // if non-chrome
+    return next;
+  }
 
-    return action => {
-      console.group(action.type);
-      console.log("%c prev state", "color: gray", store.getState());
-      console.log("%c action", "color: blue", action);
-      const returnValue = next(action);
-      console.log("%c next state", "color: green", store.getState());
-      console.groupEnd(action.type);
-      return returnValue;
-    };
+  return action => {
+    console.group(action.type);
+    console.log("%c prev state", "color: gray", store.getState());
+    console.log("%c action", "color: blue", action);
+    const returnValue = next(action);
+    console.log("%c next state", "color: green", store.getState());
+    console.groupEnd(action.type);
+    return returnValue;
   };
 };
 
-const promise = store => {
-  return next => {
-    return action => {
-      if (typeof action.then === "function") {
-        return action.then(next);
-      }
-      return next(action);
-    };
-  };
+const promise = store => next => action => {
+  if (typeof action.then === "function") {
+    return action.then(next);
+  }
+  return next(action);
 };
 
 const wrapDispatchWithMiddlewares = (store, middlewares) => {
