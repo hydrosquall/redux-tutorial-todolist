@@ -4,6 +4,7 @@ import todoApp from "./reducers";
 import { loadState, saveState } from "./localStorage";
 
 // Show how to override base methods
+// "next" is just the "dispatch" function returned by previous middleware
 const logging = store => next => {
   if (!console.group) {
     // if non-chrome
@@ -21,6 +22,7 @@ const logging = store => next => {
   };
 };
 
+// "next" is just the "dispatch" function returned by previous middleware
 const promise = store => next => action => {
   if (typeof action.then === "function") {
     return action.then(next);
