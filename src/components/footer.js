@@ -1,46 +1,37 @@
 import React from "react";
-import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-import { setVisibilityFilter } from "../actions";
-
-// Presentation only!
-const Link = ({ active, children, onClick }) =>
-  active ? (
-    <span> {children} </span>
-  ) : (
-    <a
-      href="#"
-      onClick={e => {
-        e.preventDefault();
-        onClick();
-      }}
-    >
-      {children}
-    </a>
-  );
-
-// Refer to current props
-const mapStateToProps = (state, ownProps) => ({
-  active: state.visibilityFilter === ownProps.filter
-});
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  onClick: () => dispatch(setVisibilityFilter(ownProps.filter))
-});
-const FilterLink = connect(mapStateToProps, mapDispatchToProps)(Link);
+const FilterLink = ({ filter, children }) => (
+  <Link
+    to={filter === "all" ? "" : filter}
+    activeStyle={{
+      textDecoration: "none",
+      color: "black"
+    }}
+  >
+    {children}
+  </Link>
+);
 
 const Footer = ({ store }) => (
   <p>
     Show:{" "}
-    <FilterLink filter="SHOW_ALL" store={store}>
+    <FilterLink filter="all" store={store}>
       All
     </FilterLink>{" "}
-    <FilterLink filter="SHOW_ACTIVE" store={store}>
+    <FilterLink filter="completed" store={store}>
       Active
     </FilterLink>{" "}
-    <FilterLink filter="SHOW_COMPLETED" store={store}>
+    <FilterLink filter="active" store={store}>
       Completed
     </FilterLink>
   </p>
 );
+
+FilterLink.propTypes = {
+  filter: PropTypes.oneOf(["all", "completed", "active"]).isRequired,
+  children: PropTypes.node.isRequired
+};
 
 export { Footer };
