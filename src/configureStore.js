@@ -5,8 +5,14 @@ import todoApp from "./reducers";
 import promise from "redux-promise";
 import createLogger from "redux-logger";
 
+// lets you express async action creators which involve multiple actions.
+// if it's not a function, it'll just go on to the next middleware.
+const thunk = store => next => action => {
+  typeof action === "function" ? action(store.dispatch) : next(action);
+};
+
 const configureStore = () => {
-  const middlewares = [promise];
+  const middlewares = [thunk];
 
   // Only instrument in dev environment
   if (process.env.NODE_ENV !== "production") {

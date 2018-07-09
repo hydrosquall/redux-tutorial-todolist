@@ -24,16 +24,20 @@ const receiveTodos = (filter, response) => ({
   response
 });
 
-export const requestTodos = filter => ({
+// keep this private!
+const requestTodos = filter => ({
   type: "REQUEST_TODOS",
   filter
 });
 
-// Example action that returns a PROMISE
-const fetchTodos = filter => {
+// Example action that returns a function...
+// Within this function, we'll call dispatch multiple times!
+const fetchTodos = filter => dispatch => {
+  dispatch(requestTodos(filter)); // use to help the loading indicator
+
   return api
     .fetchTodos(filter)
-    .then(response => receiveTodos(filter, response));
+    .then(response => dispatch(receiveTodos(filter, response)));
 };
 
 export { addTodo, toggleTodo, fetchTodos };
