@@ -57,10 +57,9 @@ export const addTodo = text =>
     return todo;
   });
 
-export const toggleTodo = id => {
+export const toggleTodo = id =>
   delay(500).then(() => {
     const todo = fakeDatabase.todos.find(t => t.id === id);
     todo.completed = !todo.completed; // toggle
     return todo;
   });
-};

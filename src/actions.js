@@ -15,10 +15,13 @@ const addTodo = text => dispatch =>
   });
 
 // Todolist
-const toggleTodo = id => ({
-  type: "TOGGLE_TODO",
-  id
-});
+const toggleTodo = id => dispatch =>
+  api.toggleTodo(id).then(response => {
+    dispatch({
+      type: "TOGGLE_TODO_SUCCESS",
+      response: normalize(response, schema.todo)
+    });
+  });
 
 // API
 // keep this private!
