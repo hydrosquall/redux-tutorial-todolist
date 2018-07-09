@@ -18,17 +18,18 @@ const toggleTodo = id => ({
 
 // API
 // keep this private!
-const receiveTodos = (filter, response) => ({
-  type: "RECEIVE_TODOS",
-  filter,
-  response
-});
+// Note... we could literally embed these directly in fetchTodos since they're never used elsewhere.
+// const receiveTodos = (filter, response) => ({
+//   type: "RECEIVE_TODOS",
+//   filter,
+//   response
+// });
 
-// keep this private!
-const requestTodos = filter => ({
-  type: "REQUEST_TODOS",
-  filter
-});
+// // keep this private!
+// const requestTodos = filter => ({
+//   type: "REQUEST_TODOS",
+//   filter
+// });
 
 // Example action that returns a function...
 // Within this function, we'll call dispatch multiple times!
@@ -39,11 +40,25 @@ const fetchTodos = filter => (dispatch, getState) => {
     return Promise.resolve();
   }
 
-  dispatch(requestTodos(filter)); // use to help the loading indicator
+  dispatch({
+    type: "FETCH_TODOS_REQUEST",
+    filter
+  }); // use to help the loading indicator
 
-  return api
-    .fetchTodos(filter)
-    .then(response => dispatch(receiveTodos(filter, response)));
+  return api.fetchTodos(filter).then(
+    response =>
+      dispatch({
+        type: "FETCH_TODOS_SUCCESS",
+        filter,
+        response
+      }),
+    error =>
+      dispatch({
+        type: "FETCH_TODOS_FAILURE",
+        filter,
+        message: error.message || "Something went wrong!"
+      })
+  );
 };
 
 export { addTodo, toggleTodo, fetchTodos };

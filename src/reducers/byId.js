@@ -3,7 +3,7 @@
 // Use dictionary instead of a list to store items
 const byId = (state = {}, action) => {
   switch (action.type) {
-    case "RECEIVE_TODOS":
+    case "FETCH_TODOS_SUCCESS":
       const nextState = { ...state };
       // tbd... more functional way to do this?
       action.response.forEach(todo => {
