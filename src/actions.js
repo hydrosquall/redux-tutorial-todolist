@@ -52,6 +52,7 @@ const fetchTodos = filter => (dispatch, getState) => {
         filter,
         response
       }),
+    // Preferable to making a "catch" block b/c it ensures we don't catch the wrong message.
     error =>
       dispatch({
         type: "FETCH_TODOS_FAILURE",
