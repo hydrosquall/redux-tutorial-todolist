@@ -1,6 +1,6 @@
 // Redux action creators
 import { v4 } from "node-uuid";
-
+import { getIsFetching } from "./reducers";
 import * as api from "./api";
 
 // Add Todos
@@ -32,7 +32,13 @@ const requestTodos = filter => ({
 
 // Example action that returns a function...
 // Within this function, we'll call dispatch multiple times!
-const fetchTodos = filter => dispatch => {
+const fetchTodos = filter => (dispatch, getState) => {
+  // guard against race conditions where requests is already out, limits max # of requests out.
+  // test by making the delay 5+ seconds
+  if (getIsFetching(getState(), filter)) {
+    return Promise.resolve();
+  }
+
   dispatch(requestTodos(filter)); // use to help the loading indicator
 
   return api

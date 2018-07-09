@@ -8,7 +8,9 @@ import createLogger from "redux-logger";
 // lets you express async action creators which involve multiple actions.
 // if it's not a function, it'll just go on to the next middleware.
 const thunk = store => next => action => {
-  typeof action === "function" ? action(store.dispatch) : next(action);
+  typeof action === "function"
+    ? action(store.dispatch, store.getState) // grant access to state if needed
+    : next(action);
 };
 
 const configureStore = () => {
