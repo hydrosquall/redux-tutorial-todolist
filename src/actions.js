@@ -24,9 +24,13 @@ const receiveTodos = (filter, response) => ({
   response
 });
 
+export const requestTodos = filter => ({
+  type: "REQUEST_TODOS",
+  filter
+});
+
 // Example action that returns a PROMISE
 const fetchTodos = filter => {
-  console.log(filter);
   return api
     .fetchTodos(filter)
     .then(response => receiveTodos(filter, response));
