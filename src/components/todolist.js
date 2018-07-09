@@ -19,7 +19,7 @@ class VisibleTodoList extends Component {
 
   fetchData() {
     const { filter, fetchTodos } = this.props;
-    fetchTodos(filter); // figure out how to avoid duplicating this 'all' default knowledge...
+    fetchTodos(filter).then(() => console.log("data has loaded")); // dummy code to run after promise resolves
   }
 
   render() {
