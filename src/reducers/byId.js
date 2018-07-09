@@ -1,5 +1,7 @@
 // operations by ID
 
+// normalizr helps us to use a common shape for all API responses.
+
 // Use dictionary instead of a list to store items
 const byId = (state = {}, action) => {
   switch (action.type) {
