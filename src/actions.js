@@ -8,10 +8,9 @@ import * as api from "./api";
 // Add Todos
 const addTodo = text => dispatch =>
   api.addTodo(text).then(response => {
-    console.log("Single normalized todo", normalize(response, schema.todo));
     dispatch({
       type: "ADD_TODO_SUCCESS",
-      response
+      response: normalize(response, schema.todo)
     });
   });
 
@@ -52,15 +51,10 @@ const fetchTodos = filter => (dispatch, getState) => {
 
   return api.fetchTodos(filter).then(
     response => {
-      console.log("original response", response);
-      console.log(
-        "normalized response",
-        normalize(response, schema.arrayOfTodos)
-      );
       dispatch({
         type: "FETCH_TODOS_SUCCESS",
         filter,
-        response
+        response: normalize(response, schema.arrayOfTodos)
       });
     },
     // Preferable to making a "catch" block b/c it ensures we don't catch the wrong message.

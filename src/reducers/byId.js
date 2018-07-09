@@ -4,22 +4,15 @@
 
 // Use dictionary instead of a list to store items
 const byId = (state = {}, action) => {
-  switch (action.type) {
-    case "FETCH_TODOS_SUCCESS":
-      const nextState = { ...state };
-      // tbd... more functional way to do this?
-      action.response.forEach(todo => {
-        nextState[todo.id] = todo;
-      });
-      return nextState;
-    case "ADD_TODO_SUCCESS": // add new item right away into the lookup table
-      return {
-        ...state,
-        [action.response.id]: action.response
-      };
-    default:
-      return state;
+  if (action.response) {
+    // with normalizr, we can do a blanket merge regardless of how many show up
+    return {
+      ...state,
+      ...action.response.entities.todos
+    };
   }
+
+  return state;
 };
 
 export default byId;

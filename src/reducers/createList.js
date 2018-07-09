@@ -3,14 +3,14 @@ import { combineReducers } from "redux";
 // Actions related to a list of todos
 const createList = filter => {
   const ids = (state = [], action) => {
+    // action.response.result is either a list of ids or a single id thanks to normalizr
     switch (action.type) {
       case "FETCH_TODOS_SUCCESS":
-        return filter === action.filter
-          ? action.response.map(todo => todo.id)
-          : state;
-      // don't show up if freshly created.
+        return filter === action.filter ? action.response.result : state;
       case "ADD_TODO_SUCCESS":
-        return filter !== "completed" ? [...state, action.response.id] : state;
+        return filter !== "completed"
+          ? [...state, action.response.result]
+          : state;
       default:
         return state;
     }
