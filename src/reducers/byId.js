@@ -10,7 +10,7 @@ const byId = (state = {}, action) => {
         nextState[todo.id] = todo;
       });
       return nextState;
-    case "ADD_TODO_SUCCESS": // add new item right away!
+    case "ADD_TODO_SUCCESS": // add new item right away into the lookup table
       return {
         ...state,
         [action.response.id]: action.response
