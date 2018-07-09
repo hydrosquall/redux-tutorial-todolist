@@ -25,7 +25,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const fetchTodos = filter =>
   delay(500).then(() => {
-    if (Math.random() < 0.5) {
+    if (Math.random() < 0.1) {
       // simulate bad server
       throw new Error("boom!");
     }
@@ -43,3 +43,24 @@ export const fetchTodos = filter =>
         return todos;
     }
   });
+
+// Simulate adding/toggling todos
+export const addTodo = text =>
+  delay(500).then(() => {
+    const todo = {
+      id: v4(),
+      text,
+      completed: false
+    };
+
+    fakeDatabase.todos.push(todo);
+    return todo;
+  });
+
+export const toggleTodo = id => {
+  delay(500).then(() => {
+    const todo = fakeDatabase.todos.find(t => t.id === id);
+    todo.completed = !todo.completed; // toggle
+    return todo;
+  });
+};

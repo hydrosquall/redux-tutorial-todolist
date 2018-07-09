@@ -1,14 +1,15 @@
 // Redux action creators
-import { v4 } from "node-uuid";
 import { getIsFetching } from "./reducers";
 import * as api from "./api";
 
 // Add Todos
-const addTodo = text => ({
-  type: "ADD_TODO",
-  id: v4(), // unique identifier
-  text
-});
+const addTodo = text => dispatch =>
+  api.addTodo(text).then(response => {
+    dispatch({
+      type: "ADD_TODO_SUCCESS",
+      response
+    });
+  });
 
 // Todolist
 const toggleTodo = id => ({
